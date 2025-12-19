@@ -42,10 +42,9 @@ public class PasswordVault {
         }
     }
 
-    // -------- генерация и сохранение --------
 
     private static void generateAndSave(Scanner sc, String masterPassword) throws Exception {
-        // 1. Пытаемся расшифровать существующий vault.dat
+
         StringBuilder all = new StringBuilder();
         String previous = tryDecryptExisting(masterPassword);
         if (previous != null && !previous.isEmpty()) {
@@ -55,7 +54,7 @@ public class PasswordVault {
             }
         }
 
-        // 2. Спрашиваем, сколько НОВЫХ записей добавить
+
         System.out.print("Сколько новых записей (сайт+логин+пароль) добавить: ");
         int count = Integer.parseInt(sc.nextLine());
 
@@ -73,7 +72,7 @@ public class PasswordVault {
 
         for (int i = 0; i < count; i++) {
             System.out.println("\n=== Новая запись " + (i + 1) + " ===");
-            System.out.print("Сайт/сервис (например, gmail.com): ");
+            System.out.print("Сайт/сервис: ");
             String site = sc.nextLine().trim();
 
             System.out.print("Логин/username: ");
@@ -89,7 +88,7 @@ public class PasswordVault {
 
         String plainText = all.toString();
 
-        // 3. Генерируем новую соль и IV и шифруем ВСЕ записи
+
         byte[] salt = randomBytes(16);
         byte[] iv = randomBytes(16);
         SecretKey key = deriveKey(masterPassword.toCharArray(), salt);
@@ -105,7 +104,7 @@ public class PasswordVault {
             out.println(dataB64);
         }
 
-        System.out.println("Записи сохранены (старые + новые) в " + FILE_NAME);
+        System.out.println("Старые и новые записи сохранены в " + FILE_NAME);
     }
 
     private static String tryDecryptExisting(String masterPassword) {
@@ -136,7 +135,6 @@ public class PasswordVault {
         }
     }
 
-    // -------- расшифровка и вывод --------
 
     private static void decryptAndShow(String masterPassword) throws Exception {
         File f = new File(FILE_NAME);
@@ -175,7 +173,6 @@ public class PasswordVault {
         }
     }
 
-    // -------- генерация паролей --------
 
     private static String generatePassword(int length,
                                            boolean useUpper,
@@ -221,7 +218,6 @@ public class PasswordVault {
         return new String(arr);
     }
 
-    // -------- крипто-утилиты --------
 
     private static byte[] randomBytes(int len) {
         byte[] b = new byte[len];
@@ -229,7 +225,6 @@ public class PasswordVault {
         return b;
     }
 
-    // PBKDF2WithHmacSHA256 -> ключ 256 бит для AES
     private static SecretKey deriveKey(char[] password, byte[] salt) throws Exception {
         int iterations = 65536;
         int keyLength = 256;
